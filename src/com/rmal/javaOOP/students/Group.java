@@ -35,7 +35,8 @@ class Group {
     public void addStudent(Student student, int position) {
         try {
             if (position > students.length || position < 0) {
-                throw new MyArrayOutOfBoundException();
+                throw new MyArrayOutOfBoundException("Group contain " + students.length +
+                        " students, you can not add more student !!!Or check student position(1.." + students.length + ")");
             }
             if (isStudentInGroup(student)) {
                 System.out.println("Student " + student.getName() + " " + student.getSurname() +
@@ -72,21 +73,20 @@ class Group {
         }
     }
 
-    public void searchBySurname(String surname) {
-        try {
-            for (int i = 0; i < students.length; i++) {
-                if (i == students.length - 1 && !surname.equalsIgnoreCase(students[i].getSurname())) {
-                    System.out.println("Student with surname " + surname + " not founded! Enter correct surname!");
-                } else if (students[i] == null || !surname.equalsIgnoreCase(students[i].getSurname())) {
-                    continue;
-                } else if (surname.equalsIgnoreCase(students[i].getSurname())) {
-                    System.out.println(students[i].toString() + " In this group!");
-                    break;
-                }
+    public Student searchBySurname(String surname) {
+        Student student = new Student();
+        for (int i = 0; i < students.length; i++) {
+            if (students[i] == null || !surname.equals(students[i].getSurname())) {
+                continue;
             }
-        } catch (NullPointerException e) {
-            System.out.println("Student with surname " + surname + " not in this group!");
+            if (surname.equals(students[i].getSurname())) {
+                student = students[i];
+                break;
+            } else {
+                return null;
+            }
         }
+        return student;
     }
 
     public boolean isStudentInGroup(Student student) {

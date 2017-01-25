@@ -47,9 +47,12 @@ public class GroupRunner {
         System.out.println(group);
 
         // Search students by surname
-        group.searchBySurname("belik");
-        group.searchBySurname("Pypkin");
-        group.searchBySurname("dsgsdgsdg");
-        group.searchBySurname("Kostenko");
+        System.out.println(group.searchBySurname("Belik"));
+        System.out.println(group.searchBySurname("dsgsdgsdg"));
+        System.out.println(group.searchBySurname("Shalimov"));
+        System.out.println(group.searchBySurname("Pypkin"));
+        System.out.println(group.searchBySurname("Kostenko"));
+        System.out.println(group.searchBySurname("gfhgh"));
+        System.out.println(group.searchBySurname("Ivanov"));
     }
 }

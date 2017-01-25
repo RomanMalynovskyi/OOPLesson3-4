@@ -33,10 +33,34 @@ class Student extends Human {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        Student temp = (Student) obj;
+        return (this.getSurname() == temp.getSurname());
+    }
+
+    @Override
+    public int hashCode() {
+        final int PRIME = 31;
+        int result = 1;
+        result = PRIME * result + getSurname().hashCode();
+        return result;
+    }
+
+    @Override
     public String toString() {
         return "Student{name: " + getName() + ", surname: " + getSurname() + "\n" +
                 " gender: " + getGender() + ", age: " + getAge() + "\n" +
                 " faculty: " + getFaculty() + ", numberOfTestBook: " + getNumberOfTestBook() + '}' + "\n" +
-                "----------------------------------------" +  "\n";
+                "----------------------------------------" + "\n";
+
     }
 }

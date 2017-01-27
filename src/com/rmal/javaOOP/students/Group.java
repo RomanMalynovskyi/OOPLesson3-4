@@ -1,18 +1,18 @@
 package com.rmal.javaOOP.students;
 
-/*3)Создайте класс группа — который содержит массив из 10
-        объектов класса студент. Реализуйте методы добавления,
-        удаления студента и метод поиска студента по фамилии. В
-        случае попытки добавления 11 студента создайте
-        собственное исключение и обработайте его. Определите
-        метод toString() для группы так, что бы он выводил список
-        студентов в алфавитном порядке.*/
+ /*     1.Усовершенствуйте класс Group добавив возможность
+        интерактивного добавления объекта.
+        2. Реализуйте возможность сортировки списка студентов
+        по фамилии.
+        3. Реализуйте возможность сортировки по параметру
+        (Фамилия, успеваемость и т. д.).*/
 
+import javax.swing.*;
 import java.util.Arrays;
 import java.util.Comparator;
 
 
-class Group {
+class Group implements Voenkom {
 
     private Student[] students = new Student[10];
 
@@ -32,7 +32,122 @@ class Group {
         this.students = students;
     }
 
-    public void addStudent(Student student, int position) {
+    public void interactiveAddStudent() {
+        for (int i = 0; i < students.length; i++) {
+            try {
+                while (true) {
+                    Student interStudent = new Student();
+                    String name = String.valueOf(JOptionPane.showInputDialog(null, "Enter student name"));
+                    interStudent.setName(name);
+                    String surname = String.valueOf(JOptionPane.showInputDialog(null, "Enter student surname"));
+                    interStudent.setSurname(surname);
+                    String gender = String.valueOf(JOptionPane.showInputDialog(null, "Enter student gender"));
+                    interStudent.setGender(gender);
+                    int age = Integer.valueOf(JOptionPane.showInputDialog(null, "Enter student age"));
+                    interStudent.setAge(age);
+                    String faculty = String.valueOf(JOptionPane.showInputDialog(null, "Enter student faculty"));
+                    interStudent.setFaculty(faculty);
+                    int numberOfTestBook = Integer.valueOf(JOptionPane.showInputDialog(null, "Enter student number of test book"));
+                    interStudent.setNumberOfTestBook(numberOfTestBook);
+                    int position = Integer.valueOf(JOptionPane.showInputDialog(null, "Enter student position"));
+                    checkPosition(interStudent, position);
+                    break;
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Wrong format of data!!!");
+                continue;
+            }
+            String ask = String.valueOf(JOptionPane.showInputDialog(null, "Do you want add more student? Y/n?"));
+            if (ask.equalsIgnoreCase("y")) {
+                continue;
+            } else if (ask.equalsIgnoreCase("n") || i == students.length - 1) {
+                break;
+            }
+        }
+    }
+
+    private void checkPosition(Student interStudent, int position) {
+        if (students[position - 1] == null) {
+            students[position - 1] = interStudent;
+            System.out.println("Student with surname " + interStudent.getSurname() + " added to position № " + position);
+        } else {
+            while (true) {
+                int altposition = Integer.valueOf(JOptionPane.showInputDialog(null, "Position is occupied! Please,choose another one!"));
+                if (students[altposition - 1] == null) {
+                    students[altposition - 1] = interStudent;
+                    System.out.println("Student with surname " + interStudent.getSurname() + " added to position № " + altposition);
+                    break;
+                } else {
+                    continue;
+                }
+            }
+        }
+    }
+
+    public Student[] sortedByAge(Student[] students) {
+        Arrays.sort(students, new Comparator<Student>() {
+            @Override
+            public int compare(Student o1, Student o2) {
+                if (o1 != null && o2 != null && o1.getAge() > o2.getAge()) {
+                    return 1;
+                } else if (o1 != null && o2 != null && o1.getAge() < o2.getAge()) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+        return students;
+    }
+
+    public Student[] sortedBySurname(Student[] students) {
+        Arrays.sort(students, new Comparator<Student>() {
+            @Override
+            public int compare(Student o1, Student o2) {
+                if (o1 != null && o2 != null) {
+                    return o1.getSurname().compareTo(o2.getSurname());
+                } else if (o1 == null && o2 != null) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        });
+        return students;
+    }
+
+    public Student[] sortedByName(Student[] students) {
+        Arrays.sort(students, new Comparator<Student>() {
+            @Override
+            public int compare(Student o1, Student o2) {
+                if (o1 != null && o2 != null) {
+                    return o1.getName().compareTo(o2.getName());
+                } else if (o1 == null && o2 != null) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+        });
+        return students;
+    }
+
+    @Override
+    public Group getStudentForArmy(Group group) {
+        Group forArmy = new Group();
+        int i = 0;
+        for (int j = 0; j < students.length; j++) {
+            if (group.students[j] != null && group.students[j].getGender().equals("male") && group.students[j].getAge() > 18) {
+                forArmy.students[i] = group.students[j];
+                i++;
+            } else {
+                continue;
+            }
+        }
+        return forArmy;
+    }
+
+    /* public void addStudent(Student student, int position) {
         try {
             if (position > students.length || position < 0) {
                 throw new MyArrayOutOfBoundException("Group contain " + students.length +
@@ -54,7 +169,7 @@ class Group {
         } catch (MyArrayOutOfBoundException myException) {
             System.out.println(myException.getMessage());
         }
-    }
+    }*/
 
     public void removeStudent(Student student) {
         for (int i = 0; i < students.length; i++) {
@@ -99,25 +214,9 @@ class Group {
         return isStudentInGroup;
     }
 
-    public Student[] sortedGroup(Student[] students) {
-        Arrays.sort(students, new Comparator<Student>() {
-            @Override
-            public int compare(Student o1, Student o2) {
-                if (o1 != null && o2 != null) {
-                    return o1.getName().compareTo(o2.getName());
-                } else if (o1 == null && o2 != null) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            }
-        });
-        return students;
-    }
-
     @Override
     public String toString() {
-        return "Group{" + Arrays.toString(sortedGroup(students)) + '}' + "\n";
+        return "Group{" + Arrays.toString(sortedByName(students)) + '}' + "\n";
     }
 }
 

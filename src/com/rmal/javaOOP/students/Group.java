@@ -8,6 +8,7 @@ package com.rmal.javaOOP.students;
         (Фамилия, успеваемость и т. д.).*/
 
 import javax.swing.*;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -31,6 +32,68 @@ class Group implements Voenkom {
     public void setStudents(Student[] students) {
         this.students = students;
     }
+
+    /*Усовершенствуйте класс описывающий группу студентов
+    добавив возможность сохранения группы в файл.*/
+
+    public void safeGroupInFile(String pathname) {
+        try (PrintWriter pw = new PrintWriter(pathname)) {
+            for (int i = 0; i < students.length; i++) {
+                if (students[i] != null) {
+                    pw.print(students[i].getName() + " ,");
+                    pw.println(students[i].getSurname() + " ,");
+                    pw.print(students[i].getGender() + " ,");
+                    pw.println(students[i].getAge() + " ,");
+                    pw.print(students[i].getFaculty() + " ,");
+                    pw.println(students[i].getNumberOfTestBook() + " ,");
+                    pw.println(" ");
+                } else {
+                    continue;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(null, "File not founded!");
+        }
+    }
+
+    /*Реализовать обратный процесс — т.е. считать данные о
+    группе из файла и на их основе создать объект типа группа.*/
+
+    public Group getGroupFromFile(String pathname) {
+        Group fromFile = new Group();
+        Student[] students = new Student[10];
+        String s1 = "";
+        try (BufferedReader bf = new BufferedReader(new FileReader(pathname))) {
+            for (;(s1 = bf.readLine()) != null; ) {
+               String[] array = s1.split(",");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String readFile(String pathname) {
+        String s1 = "";
+        String str = null;
+        try (BufferedReader bf = new BufferedReader(new FileReader(pathname))) {
+            for (; (s1 = bf.readLine()) != null; ) {
+                str = s1;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+
+    private String[] splitingString(String str) {
+        String[] array = str.split(",");
+        return array;
+    }
+
 
     public void interactiveAddStudent() {
         for (int i = 0; i < students.length; i++) {
@@ -123,9 +186,9 @@ class Group implements Voenkom {
                 if (o1 != null && o2 != null) {
                     return o1.getName().compareTo(o2.getName());
                 } else if (o1 == null && o2 != null) {
-                    return -1;
-                } else {
                     return 1;
+                } else {
+                    return -1;
                 }
             }
         });
@@ -133,12 +196,12 @@ class Group implements Voenkom {
     }
 
     @Override
-    public Group getStudentForArmy(Group group) {
-        Group forArmy = new Group();
+    public Student[] getStudentForArmy(Group group) {
+        Student[] forArmy = new Student[getStudents().length];
         int i = 0;
         for (int j = 0; j < students.length; j++) {
             if (group.students[j] != null && group.students[j].getGender().equals("male") && group.students[j].getAge() > 18) {
-                forArmy.students[i] = group.students[j];
+                forArmy[i] = group.students[j];
                 i++;
             } else {
                 continue;
@@ -147,7 +210,7 @@ class Group implements Voenkom {
         return forArmy;
     }
 
-    /* public void addStudent(Student student, int position) {
+    public void addStudent(Student student, int position) {
         try {
             if (position > students.length || position < 0) {
                 throw new MyArrayOutOfBoundException("Group contain " + students.length +
@@ -169,7 +232,7 @@ class Group implements Voenkom {
         } catch (MyArrayOutOfBoundException myException) {
             System.out.println(myException.getMessage());
         }
-    }*/
+    }
 
     public void removeStudent(Student student) {
         for (int i = 0; i < students.length; i++) {

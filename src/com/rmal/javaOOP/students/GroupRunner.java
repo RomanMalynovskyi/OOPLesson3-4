@@ -9,16 +9,23 @@ public class GroupRunner {
         Group group = new Group();
 
         // Interactive adding of students
-        group.interactiveAddStudent();
+      // group.interactiveAddStudent();
 
         // Print out group of students
-        System.out.println(group);
+       // System.out.println(group);
 
         //Getting students for army
-        Voenkom voenkom = new Group();
-        voenkom.getStudentForArmy(group);
+      //  Voenkom voenkom = new Group();
+      //  voenkom.getStudentForArmy(group);
 
         // Print out student`s group for army
-        System.out.println(voenkom.getStudentForArmy(group));
+       // System.out.println(Arrays.toString(voenkom.getStudentForArmy(group)));
+
+        // Save group in file
+     // group.safeGroupInFile("c:/Task2/Student group.doc");
+
+        //Get group from file
+       group.getGroupFromFile("c:/Task2/Student group.doc");
+
     }
 }
